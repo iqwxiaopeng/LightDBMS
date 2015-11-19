@@ -1,5 +1,5 @@
-SOURCES=lexem.cpp syntax_analyser.cpp syntax_tree.cpp test_syntax_analyser.cpp
-HEADERS=lexem.h syntax_analyser.h syntax_tree.h
+SOURCES=syntax_analyser.cpp syntax_tree.cpp test_syntax_analyser.cpp FiniteStateMachine.cpp
+HEADERS=lexem.h syntax_analyser.h syntax_tree.h Events.h FiniteStateMachine.h
 
 EXECUTABLE=dbms.exe
 
@@ -8,7 +8,7 @@ CFLAGS=-Wall -std=c++11
 
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): 
+$(EXECUTABLE): $(SOURCES) $(HEADERS) 
 	$(CC) $(SOURCES) $(HEADERS) $(CFLAGS) -o $(EXECUTABLE) 
 
 clean:
