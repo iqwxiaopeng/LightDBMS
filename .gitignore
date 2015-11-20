@@ -36,3 +36,8 @@ cmake_install.cmake
 
 # vim temporary file
 *.swp
+
+# Visual Studio files
+*.sln
+*.vcxproj
+*.vcxproj.filters
