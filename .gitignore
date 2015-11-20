@@ -26,3 +26,11 @@
 *.exe
 *.out
 *.app
+dbms
+
+# CMake-generated files and directories 
+Makefile
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+
