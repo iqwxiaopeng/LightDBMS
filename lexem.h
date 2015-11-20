@@ -15,11 +15,11 @@ namespace Lexem{
                 LexemType type;
                 std::string value;
         public:
-                Lexem(LexemType type, std::string value) : type(type), value(value) {};
-                ~Lexem() {};
+                Lexem(LexemType type, std::string value);
+                ~Lexem();
 
-                LexemType getType() { return type; }
-                std::string getValue() { return value; }
+                LexemType getType();
+                std::string getValue();
         };
 }
 #endif
