@@ -13,6 +13,8 @@
 // 	std::list<SyntaxTree*> childs;
 // };
 
+//using namespace Lexem;
+
 class SyntaxAnalyser
 {
 private:
@@ -33,7 +35,7 @@ private:
 	// };
 public:
 	SyntaxAnalyser() {};
-	bool analyse(std::list<Lexem> lexemChain);
+	bool analyse(std::list<Lexem::Lexem> lexemChain);
 	~SyntaxAnalyser() {};
 };
 
