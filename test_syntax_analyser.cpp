@@ -1,32 +1,42 @@
 #include <iostream>
+#include "Events.h"
+#include <iostream>
+#include "FiniteStateMachine.h"
 #include "lexem.h"
 #include "syntax_analyser.h"
 #include <list>
 #include <stack>
 
 using namespace std;
+using namespace Lexem;
 
 int main(int argc, char *argv[])
 {
-	Lexem l1(LexemType::SELECT, "");
-	Lexem l2(LexemType::IDENTIFIER, "name");
-	Lexem l2_1(LexemType::COMMA, "");
-	Lexem l2_2(LexemType::IDENTIFIER, "price");
-	Lexem l3(LexemType::FROM, "");
-	Lexem l4(LexemType::IDENTIFIER, "items");
-	Lexem l5(LexemType::SEMICOLON, "");
+	string testQuery;
+	if (argc > 1) {
+		testQuery = argv[1];
+	} else {
+		testQuery = "select name, price from items where a*b=c#;";
+	}
 
-	list<Lexem> lexemChain;
-	lexemChain.push_back(l1);
-	lexemChain.push_back(l2);
-	lexemChain.push_back(l2_1);
-	lexemChain.push_back(l2_2);
-	lexemChain.push_back(l3);
-	lexemChain.push_back(l4);
-	lexemChain.push_back(l5);
+	cout << "========================================" << endl <<
+		"1. Starting Lexical Analyze... " << endl <<
+		"========================================" << endl <<
+		"Parsing string \'" << testQuery << "\'." << endl;		 
+	
+	Machine::FiniteStateMachine machine;
+        machine.Process(testQuery);
 
+	for(std::list<Lexem::Lexem>::iterator it = machine.lexems.begin(); it != machine.lexems.end(); ++it)
+        {
+                std::cout << it->getType() << " " << it->getValue() << std::endl;
+        }
+
+	cout << "========================================" << endl <<
+		"2. Starting Syntax Analyze... " << endl <<
+		"========================================" << endl;
 	SyntaxAnalyser analyser;
-	bool success = analyser.analyse(lexemChain);
+	bool success = analyser.analyse(machine.lexems);
 	if (success)
 		cout << "Success!" << endl;
 	else
@@ -43,4 +53,5 @@ int main(int argc, char *argv[])
 
 	// cout << (int)l2.getType() << endl;
 	// cout << l2.getValue() << endl;
+	return 0;
 }

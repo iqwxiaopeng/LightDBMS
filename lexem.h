@@ -1,21 +1,25 @@
-#include <string>
-
 #ifndef LEXEM_H
 #define LEXEM_H
 
-enum class LexemType { SELECT, IDENTIFIER, FROM, SEMICOLON, COMMA, STAR, WHERE, IN, NOT, AND, OR, LIKE, EXIST, MORE, LESS, EUQAL};
+#include <string>
 
-class Lexem
-{
-private:
-	LexemType type;
-	std::string value;
-public:
-	Lexem(LexemType type, std::string value);
-	LexemType getType();
-	std::string getValue();
-	~Lexem() {};
-	
-};
+namespace Lexem{
 
+        enum LexemType
+        {
+                IDENTIFIER, CONSTANT, STRING, MULTIPLY, DIVISION, DOT, COMMA, SPACE, SEMICOLON, COMPARSION, OTHER
+        };
+
+        class Lexem
+        {
+                LexemType type;
+                std::string value;
+        public:
+                Lexem(LexemType type, std::string value);
+                ~Lexem();
+
+                LexemType getType();
+                std::string getValue();
+        };
+}
 #endif

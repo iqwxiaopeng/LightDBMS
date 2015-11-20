@@ -20,7 +20,7 @@ using namespace std;
 // 	}
 // }
 
-bool SyntaxAnalyser::analyse(std::list<Lexem> lexemChain) {
+bool SyntaxAnalyser::analyse(std::list<Lexem::Lexem> lexemChain) {
 	int state = 0;
 	int new_state;
 	SyntaxTree root;
