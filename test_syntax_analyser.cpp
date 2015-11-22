@@ -8,7 +8,7 @@
 #include <stack>
 
 using namespace std;
-using namespace Lexem;
+
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	if (argc > 1) {
 		testQuery = argv[1];
 	} else {
-		testQuery = "select name, price from items where a*b=c#;";
+		testQuery = "select name, price from items where a*b=c;";
 	}
 
 	cout << "========================================" << endl <<
@@ -53,5 +53,6 @@ int main(int argc, char *argv[])
 
 	// cout << (int)l2.getType() << endl;
 	// cout << l2.getValue() << endl;
+	system("pause");
 	return 0;
 }

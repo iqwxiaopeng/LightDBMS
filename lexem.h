@@ -5,10 +5,11 @@
 
 namespace Lexem{
 
-        enum LexemType
-        {
-                IDENTIFIER, CONSTANT, STRING, MULTIPLY, DIVISION, DOT, COMMA, SPACE, SEMICOLON, COMPARSION, OTHER
-        };
+	enum LexemType
+	{
+		IDENTIFIER, CONSTANT, STRING, MULTIPLY, DIVISION, DOT, COMMA, SPACE, SEMICOLON, MORE, LESS, EQUAL, OTHER,
+		SELECT, FROM, WHERE, NOT, AND, OR, LIKE
+	};
 
         class Lexem
         {

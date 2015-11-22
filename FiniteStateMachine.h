@@ -3,129 +3,17 @@
 
 #include <string>
 #include <list>
-#include "lexem.h"
+#include "Lexem.h"
 #include <boost/statechart/state_machine.hpp>
 #include "Events.h"
 #include <boost/statechart/transition.hpp>
 #include <boost/statechart/simple_state.hpp>
+#include "Machine.h"
 
 namespace States
 {
-	struct Start;
-	struct Ident;
-	struct Constant;
-	struct String_;
-	struct Multiply;
-	struct Division;
-	struct Dot;
-	struct Comma;
-	struct Space;
-	struct Semicolon;
-	struct Comparsion;
-	struct Other;
-}
-
-namespace Machine{
-	class FiniteStateMachine
-	{
-	public:
-		FiniteStateMachine() {};
-		~FiniteStateMachine() { lexems.clear(); value.clear(); }
-
-		std::string value;
-		std::list<Lexem::Lexem> lexems;
-
-		void Process(std::string& text);
-
-		void FoundIdent()		{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::IDENTIFIER,	this->value));	value = ""; }
-		void FoundConstant()	{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::CONSTANT,		this->value));  value = ""; }
-		void FoundString_()		{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::STRING,		this->value));  value = ""; }
-		void FoundMultiply()	{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::MULTIPLY,		"*"));			value = ""; }
-		void FoundDivision()	{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::DIVISION,		"/"));			value = ""; }
-		void FoundDot()			{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::DOT,			"."));			value = ""; }
-		void FoundComma()		{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::COMMA,		","));			value = ""; }
-		void FoundSpace()		{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::SPACE,		" "));			value = ""; }
-		void FoundSemicolon()	{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::SEMICOLON,	";"));			value = ""; }
-		void FoundComparsion()	{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::COMPARSION,	this->value));	value = ""; }
-		void FoundOther()		{ lexems.push_back(Lexem::Lexem(Lexem::LexemType::OTHER,		this->value)); }
-	};
 
 
-	struct Machine : boost::statechart::state_machine<Machine, States::Start>
-	{
-		Machine(FiniteStateMachine& mainMachine) : MainMachine_(mainMachine) {}
-
-		void FoundIdent(const Events::Space&)				{ MainMachine_.FoundIdent(); }
-		void FoundIdent(const Events::Multiplication&)		{ MainMachine_.FoundIdent(); }
-		void FoundIdent(const Events::Division&)			{ MainMachine_.FoundIdent(); }
-		void FoundIdent(const Events::Dot&)					{ MainMachine_.FoundIdent(); }
-		void FoundIdent(const Events::Comma&)				{ MainMachine_.FoundIdent(); }
-		void FoundIdent(const Events::Comparsion&)			{ MainMachine_.FoundIdent(); }
-		void FoundIdent(const Events::Semicolon&)			{ MainMachine_.FoundIdent(); }
-
-		void FoundConstant(const Events::Space&)			{ MainMachine_.FoundConstant(); }
-		void FoundConstant(const Events::Comparsion&)		{ MainMachine_.FoundConstant(); }
-		void FoundConstant(const Events::Multiplication&)	{ MainMachine_.FoundConstant(); }
-		void FoundConstant(const Events::Division&)			{ MainMachine_.FoundConstant(); }
-		void FoundConstant(const Events::Dot&)				{ MainMachine_.FoundConstant(); }
-		void FoundConstant(const Events::Comma&)			{ MainMachine_.FoundConstant(); }
-		void FoundConstant(const Events::Semicolon&)		{ MainMachine_.FoundConstant(); }
-
-		void FoundString_(const Events::Quote&)				{ MainMachine_.FoundString_(); }
-
-		void FoundMultiply(const Events::Digit&)			{ MainMachine_.FoundMultiply(); }
-		void FoundMultiply(const Events::Letter&)			{ MainMachine_.FoundMultiply(); }
-		void FoundMultiply(const Events::Quote&)			{ MainMachine_.FoundMultiply(); }
-		void FoundMultiply(const Events::Dot&)				{ MainMachine_.FoundMultiply(); }
-		void FoundMultiply(const Events::Space&)			{ MainMachine_.FoundMultiply(); }
-
-		void FoundDivision(const Events::Digit&)			{ MainMachine_.FoundDivision(); }
-		void FoundDivision(const Events::Letter&)			{ MainMachine_.FoundDivision(); }
-		void FoundDivision(const Events::Space&)			{ MainMachine_.FoundDivision(); }
-
-		void FoundDot(const Events::Letter&)				{ MainMachine_.FoundDot(); }
-
-		void FoundComma(const Events::Digit&)				{ MainMachine_.FoundComma(); } 
-		void FoundComma(const Events::Letter&)				{ MainMachine_.FoundComma(); }
-		void FoundComma(const Events::Space&)				{ MainMachine_.FoundComma(); }
-
-		void FoundSpace(const Events::Digit&)				{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Letter&)				{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Quote&)				{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Multiplication&)		{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Division&)			{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Dot&)					{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Comma&)				{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Space&)				{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Semicolon&)			{ MainMachine_.FoundSpace(); }
-		void FoundSpace(const Events::Comparsion&)			{ MainMachine_.FoundSpace(); }
-
-		void FoundSemicolon(const Events::Space&)			{ MainMachine_.FoundSemicolon(); }
-
-		void FoundComparsion(const Events::Digit&)			{ MainMachine_.FoundComparsion(); }
-		void FoundComparsion(const Events::Letter&)			{ MainMachine_.FoundComparsion(); }
-		void FoundComparsion(const Events::Quote&)			{ MainMachine_.FoundComparsion(); }
-		void FoundComparsion(const Events::Space&)			{ MainMachine_.FoundComparsion(); }
-		void FoundComparsion(const Events::Comparsion&)		{ MainMachine_.FoundComparsion(); }
-
-		void FoundOther(const Events::Digit&)				{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Letter&)				{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Quote&)				{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Multiplication&)		{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Division&)			{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Dot&)					{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Comma&)				{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Space&)				{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Semicolon&)			{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Comparsion&)			{ MainMachine_.FoundOther(); this->terminate(); }
-		void FoundOther(const Events::Other&)				{ MainMachine_.FoundOther(); this->terminate(); }
-	private:
-		FiniteStateMachine& MainMachine_;
-	};
-}
-
-namespace States
-{
 	struct Start
 		: boost::statechart::simple_state<Start, Machine::Machine>
 	{
@@ -139,8 +27,11 @@ namespace States
 			boost::statechart::transition<Events::Comma, Comma>,
 			boost::statechart::transition<Events::Space, Space>,
 			boost::statechart::transition<Events::Semicolon, Semicolon>,
-			boost::statechart::transition<Events::Comparsion, Comparsion>,
-			boost::statechart::transition<Events::Other, Other>
+			boost::statechart::transition<Events::More, More>,
+			boost::statechart::transition<Events::Less, Less>,
+			boost::statechart::transition<Events::Equal, Equal>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterS, S>
 		> reactions;
 	};
 
@@ -148,61 +39,64 @@ namespace States
 		: boost::statechart::simple_state<Ident, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Quote,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Multiplication,	Multiply,	Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Division,			Division,	Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Dot,				Dot,		Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Comma,			Comma,		Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Semicolon,		Semicolon,	Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Comparsion,		Comparsion, Machine::Machine, &Machine::Machine::FoundIdent>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
-		>
-			reactions;
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		>reactions;
 	};
 
 	struct Constant
 		: boost::statechart::simple_state<Constant, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Letter,			Ident>,
-			boost::statechart::transition<Events::Quote,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Multiplication,	Multiply,	Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Division,			Division,	Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Dot,				Dot,		Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Comma,			Comma,		Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Semicolon,		Semicolon,	Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Comparsion,		Comparsion, Machine::Machine, &Machine::Machine::FoundConstant>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
-		>
-			reactions;
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundConstant>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		>reactions;
 	};
 
 	struct String_
 		: boost::statechart::simple_state<String_, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Quote,			Start,		Machine::Machine, &Machine::Machine::FoundString_>
-		>
-			reactions;
+			boost::statechart::transition<Events::Quote, Start, Machine::Machine, &Machine::Machine::FoundString_>
+		>reactions;
 	};
 
 	struct Multiply
 		: boost::statechart::simple_state<Multiply, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Constant,	Machine::Machine, &Machine::Machine::FoundMultiply>,
-			boost::statechart::transition<Events::Letter,			Ident,		Machine::Machine, &Machine::Machine::FoundMultiply>,
-			boost::statechart::transition<Events::Quote,			String_,	Machine::Machine, &Machine::Machine::FoundMultiply>,
-			boost::statechart::transition<Events::Multiplication,	Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Division,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Dot,				Dot,		Machine::Machine, &Machine::Machine::FoundMultiply>,
-			boost::statechart::transition<Events::Comma,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundMultiply>,
-			boost::statechart::transition<Events::Semicolon,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comparsion,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundMultiply>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundMultiply>,
+			boost::statechart::transition<Events::Quote, String_, Machine::Machine, &Machine::Machine::FoundMultiply>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundMultiply>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundMultiply>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
 		> reactions;
 	};
 
@@ -210,17 +104,19 @@ namespace States
 		: boost::statechart::simple_state<Division, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Constant,	Machine::Machine, &Machine::Machine::FoundDivision>,
-			boost::statechart::transition<Events::Letter,			Ident,		Machine::Machine, &Machine::Machine::FoundDivision>,
-			boost::statechart::transition<Events::Quote,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Multiplication,	Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Division,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Dot,				Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comma,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundDivision>,
-			boost::statechart::transition<Events::Semicolon,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comparsion,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundDivision>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundDivision>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundDivision>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
 		> reactions;
 	};
 
@@ -228,17 +124,19 @@ namespace States
 		: boost::statechart::simple_state<Dot, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Letter,			Ident,		Machine::Machine, &Machine::Machine::FoundDot>,
-			boost::statechart::transition<Events::Quote,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Multiplication,	Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Division,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Dot,				Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comma,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Space,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Semicolon,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comparsion,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundDot>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
 		> reactions;
 	};
 
@@ -246,17 +144,19 @@ namespace States
 		: boost::statechart::simple_state<Comma, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Constant,	Machine::Machine, &Machine::Machine::FoundComma>,
-			boost::statechart::transition<Events::Letter,			Ident,		Machine::Machine, &Machine::Machine::FoundComma>,
-			boost::statechart::transition<Events::Quote,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Multiplication,	Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Division,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Dot,				Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comma,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundComma>,
-			boost::statechart::transition<Events::Semicolon,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comparsion,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundComma>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundComma>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundComma>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
 		> reactions;
 	};
 
@@ -264,17 +164,25 @@ namespace States
 		: boost::statechart::simple_state<Space, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Constant,	Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Letter,			Ident,		Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Quote,			String_,	Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Multiplication,	Multiply,	Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Division,			Division,	Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Dot,				Dot,		Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Comma,			Comma,		Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Semicolon,		Semicolon,	Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Comparsion,		Comparsion, Machine::Machine, &Machine::Machine::FoundSpace>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Quote, String_, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterA, A, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::LetterF, F, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::LetterL, L, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::LetterN, N, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::LetterO, O, Machine::Machine, &Machine::Machine::FoundSpace>,
+			boost::statechart::transition<Events::LetterW, W, Machine::Machine, &Machine::Machine::FoundSpace>
 		> reactions;
 	};
 
@@ -282,35 +190,79 @@ namespace States
 		: boost::statechart::simple_state<Semicolon, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Letter,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Quote,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Multiplication,	Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Division,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Dot,				Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comma,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundSemicolon>,
-			boost::statechart::transition<Events::Semicolon,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comparsion,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Letter, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundSemicolon>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
 		> reactions;
 	};
 
-	struct Comparsion
-		: boost::statechart::simple_state<Comparsion, Machine::Machine>
+	struct More
+		: boost::statechart::simple_state<More, Machine::Machine>
 	{
 		typedef boost::mpl::list<
-			boost::statechart::transition<Events::Digit,			Constant,	Machine::Machine, &Machine::Machine::FoundComparsion>,
-			boost::statechart::transition<Events::Letter,			Ident,		Machine::Machine, &Machine::Machine::FoundComparsion>,
-			boost::statechart::transition<Events::Quote,			String_,	Machine::Machine, &Machine::Machine::FoundComparsion>,
-			boost::statechart::transition<Events::Multiplication,	Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Division,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Dot,				Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comma,			Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Space,			Space,		Machine::Machine, &Machine::Machine::FoundComparsion>,
-			boost::statechart::transition<Events::Semicolon,		Other,		Machine::Machine, &Machine::Machine::FoundOther>,
-			boost::statechart::transition<Events::Comparsion,		Comparsion, Machine::Machine, &Machine::Machine::FoundComparsion>,
-			boost::statechart::transition<Events::Other,			Other,		Machine::Machine, &Machine::Machine::FoundOther>
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundMore>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundMore>,
+			boost::statechart::transition<Events::Quote, String_, Machine::Machine, &Machine::Machine::FoundMore>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundMore>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundMore>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct Less
+		: boost::statechart::simple_state<Less, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundLess>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundLess>,
+			boost::statechart::transition<Events::Quote, String_, Machine::Machine, &Machine::Machine::FoundLess>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundLess>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundLess>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundLess>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct Equal
+		: boost::statechart::simple_state<Equal, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Digit, Constant, Machine::Machine, &Machine::Machine::FoundEqual>,
+			boost::statechart::transition<Events::Letter, Ident, Machine::Machine, &Machine::Machine::FoundEqual>,
+			boost::statechart::transition<Events::Quote, String_, Machine::Machine, &Machine::Machine::FoundEqual>,
+			boost::statechart::transition<Events::Multiplication, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundEqual>,
+			boost::statechart::transition<Events::Semicolon, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
 		> reactions;
 	};
 
@@ -318,6 +270,539 @@ namespace States
 		: boost::statechart::simple_state<Other, Machine::Machine>
 	{
 		typedef boost::mpl::list<> reactions;
+	};
+
+	struct S
+		: boost::statechart::simple_state<S, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::LetterE, SE>,
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct SE
+		: boost::statechart::simple_state<SE, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::LetterL, SEL>,
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct SEL
+		: boost::statechart::simple_state<SEL, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::LetterE, SELE>,
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct SELE
+		: boost::statechart::simple_state<SELE, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::LetterC, SELEC>,
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct SELEC
+		: boost::statechart::simple_state<SELEC, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::LetterT, SELECT>,
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct SELECT
+		: boost::statechart::simple_state<SELECT, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundSelect>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct F
+		: boost::statechart::simple_state<F, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterR, FR>
+		> reactions;
+	};
+
+	struct FR
+		: boost::statechart::simple_state<FR, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterO, FRO>
+		> reactions;
+	};
+
+	struct FRO
+		: boost::statechart::simple_state<FRO, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterM, FROM>
+		> reactions;
+	};
+
+	struct FROM
+		: boost::statechart::simple_state<FROM, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundFrom>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct W
+		: boost::statechart::simple_state<W, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterH, WH>
+		> reactions;
+	};
+
+	struct WH
+		: boost::statechart::simple_state<WH, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterE, WHE>
+		> reactions;
+	};
+
+	struct WHE
+		: boost::statechart::simple_state<WHE, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterR, WHER>
+		> reactions;
+	};
+
+	struct WHER
+		: boost::statechart::simple_state<WHER, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterE, WHERE>
+		> reactions;
+	};
+
+	struct WHERE
+		: boost::statechart::simple_state<WHERE, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundWhere>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct L
+		: boost::statechart::simple_state<L, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterI, LI>
+		> reactions;
+	};
+
+	struct LI
+		: boost::statechart::simple_state<LI, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterK, LIK>
+		> reactions;
+	};
+
+	struct LIK
+		: boost::statechart::simple_state<LIK, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterE, LIKE>
+		> reactions;
+	};
+
+	struct LIKE
+		: boost::statechart::simple_state<LIKE, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundLike>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct N
+		: boost::statechart::simple_state<N, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterO, NO>
+		> reactions;
+	};
+
+	struct NO
+		: boost::statechart::simple_state<NO, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterT, NOT>
+		> reactions;
+	};
+
+	struct NOT
+		: boost::statechart::simple_state<NOT, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundNot>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct A
+		: boost::statechart::simple_state<A, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterN, AN>
+		> reactions;
+	};
+
+	struct AN
+		: boost::statechart::simple_state<AN, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterD, AND>
+		> reactions;
+	};
+
+	struct AND
+		: boost::statechart::simple_state<AND, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundAnd>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
+	};
+
+	struct O
+		: boost::statechart::simple_state<O, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundIdent>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::LetterR, OR>
+		> reactions;
+	};
+
+	struct OR
+		: boost::statechart::simple_state<OR, Machine::Machine>
+	{
+		typedef boost::mpl::list<
+			boost::statechart::transition<Events::Letter, Ident>,
+			boost::statechart::transition<Events::Quote, Other, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Multiplication, Multiply, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Division, Division, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Dot, Dot, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Comma, Comma, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Space, Space, Machine::Machine, &Machine::Machine::FoundOr>,
+			boost::statechart::transition<Events::Semicolon, Semicolon, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::More, More, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Less, Less, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Equal, Equal, Machine::Machine, &Machine::Machine::FoundOther>,
+			boost::statechart::transition<Events::Other, Other, Machine::Machine, &Machine::Machine::FoundOther>
+		> reactions;
 	};
 }
 
