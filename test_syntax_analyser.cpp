@@ -2,7 +2,7 @@
 #include "Events.h"
 #include <iostream>
 #include "FiniteStateMachine.h"
-#include "lexem.h"
+#include "Lexem.h"
 #include "syntax_analyser.h"
 #include <list>
 #include <stack>
@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
 
 	// cout << (int)l2.getType() << endl;
 	// cout << l2.getValue() << endl;
+	#ifdef WIN32
 	system("pause");
+	#endif // WIN32
 	return 0;
 }

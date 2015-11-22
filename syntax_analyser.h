@@ -1,6 +1,6 @@
 #include <string>
 #include <list>
-#include "lexem.h"
+#include "Lexem.h"
 
 #ifndef SYNTAX_ANALYSER_H
 #define SYNTAX_ANALYSER_H

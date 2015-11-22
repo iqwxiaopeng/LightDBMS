@@ -1,6 +1,6 @@
 #include "syntax_analyser.h"
 #include "syntax_tree.h"
-#include "lexem.h"
+#include "Lexem.h"
 #include <string>
 #include <iostream>
 #include <list>
