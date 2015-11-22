@@ -74,7 +74,7 @@ namespace Machine {
 		void FoundDivision() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::DIVISION, "/"));			value = ""; }
 		void FoundDot() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::DOT, "."));			value = ""; }
 		void FoundComma() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::COMMA, ","));			value = ""; }
-		void FoundSpace() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::SPACE, " "));			value = ""; }
+		void FoundSpace() { value = ""; }
 		void FoundSemicolon() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::SEMICOLON, ";"));			value = ""; }
 		void FoundMore() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::MORE, this->value));	value = ""; }
 		void FoundLess() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::LESS, this->value));	value = ""; }
