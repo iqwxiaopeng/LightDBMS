@@ -1,6 +1,4 @@
 #include <iostream>
-#include "Events.h"
-#include <iostream>
 #include "FiniteStateMachine.h"
 #include "Lexem.h"
 #include "syntax_analyser.h"
@@ -24,8 +22,8 @@ int main(int argc, char *argv[])
 		"========================================" << endl <<
 		"Parsing string \'" << testQuery << "\'." << endl;		 
 	
-	Machine::FiniteStateMachine machine;
-        machine.Process(testQuery);
+	FiniteStateMachine machine;
+	machine.Process(testQuery);
 
 	for(std::list<Lexem::Lexem>::iterator it = machine.lexems.begin(); it != machine.lexems.end(); ++it)
         {
