@@ -1,3 +1,4 @@
+//structure of the machine http://www.devexp.ru/2011/02/konechnye-avtomaty-v-c/
 #ifndef FINITE_STATE_MACHINE_H
 #define FINITE_STATE_MACHINE_H
 #include "Lexem.h"
@@ -9,12 +10,10 @@ class FiniteStateMachine
 	enum States
 	{
 		Start, Ident, Constant, String_, Multiply, Division, Dot, Comma, Space, Semicolon, More, Less, Equal, Other,
-		A, F, L, N, O, S, W,
-		AN, FR, LI, NO, OR, SE, WH,
-		AND, FRO, LIK, NOT, SEL, WHE,
-		FROM, LIKE, SELE, WHER,
-		SELEC, WHERE,
-		SELECT
+		A, AN, AND, N, NO, NOT, O, OR, 
+		F, FR, FRO, FROM, L, LI, LIK, LIKE, 
+		S, SE, SEL, SELE, SELEC, SELECT, 
+		W, WH, WHE, WHER, WHERE
 	};
 
 	static const size_t STATES_COUNT = 41;
