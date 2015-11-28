@@ -29,6 +29,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Start, Equal_Ev, Equal);
 	AddTransition(Start, Other_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Start, LetterS_Ev, S);
+	AddTransition(Start, LeftBracket_Ev, Leftbracket);
+	AddTransition(Start, RightBracket_Ev, Rightbracket);
 
 	AddTransition(Ident, Quote_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Ident, Multiplication_Ev, Multiply, &FiniteStateMachine::FoundIdent);
@@ -41,6 +43,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Ident, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(Ident, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(Ident, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Ident, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Ident, RightBracket_Ev, Rightbracket, &FiniteStateMachine::FoundIdent);
 
 	AddTransition(Constant, Letter_Ev, Ident);
 	AddTransition(Constant, Quote_Ev, Other, &FiniteStateMachine::FoundOther);
@@ -54,6 +58,41 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Constant, Less_Ev, Less, &FiniteStateMachine::FoundConstant);
 	AddTransition(Constant, Equal_Ev, Equal, &FiniteStateMachine::FoundConstant);
 	AddTransition(Constant, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Constant, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Constant, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+
+	AddTransition(Leftbracket, Digit_Ev, Constant, &FiniteStateMachine::FoundLeftBracket);
+	AddTransition(Leftbracket, Letter_Ev, Ident, &FiniteStateMachine::FoundLeftBracket);
+	AddTransition(Leftbracket, Quote_Ev, String_, &FiniteStateMachine::FoundLeftBracket);
+	AddTransition(Leftbracket, Multiplication_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Division_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Dot_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Comma_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Space_Ev, Space, &FiniteStateMachine::FoundLeftBracket);
+	AddTransition(Leftbracket, Semicolon_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, More_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Less_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Leftbracket, LetterS_Ev, S, &FiniteStateMachine::FoundLeftBracket);
+	AddTransition(Leftbracket, LeftBracket_Ev, Leftbracket, &FiniteStateMachine::FoundLeftBracket);
+	AddTransition(Leftbracket, RightBracket_Ev, Rightbracket, &FiniteStateMachine::FoundLeftBracket);
+
+	AddTransition(Rightbracket, Digit_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Letter_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Quote_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Multiplication_Ev, Multiply, &FiniteStateMachine::FoundRightBracket);
+	AddTransition(Rightbracket, Division_Ev, Division, &FiniteStateMachine::FoundRightBracket);
+	AddTransition(Rightbracket, Dot_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Comma_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Space_Ev, Space, &FiniteStateMachine::FoundRightBracket);
+	AddTransition(Rightbracket, Semicolon_Ev, Semicolon, &FiniteStateMachine::FoundRightBracket);
+	AddTransition(Rightbracket, More_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Less_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Rightbracket, RightBracket_Ev, Rightbracket, &FiniteStateMachine::FoundRightBracket);
 
 	AddTransition(String_, Quote_Ev, Start, &FiniteStateMachine::FoundString_);
 
@@ -70,6 +109,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Multiply, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Multiply, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Multiply, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Multiply, LeftBracket_Ev, Leftbracket, &FiniteStateMachine::FoundMultiply);
+	AddTransition(Multiply, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Division, Digit_Ev, Constant, &FiniteStateMachine::FoundDivision);
 	AddTransition(Division, Letter_Ev, Ident, &FiniteStateMachine::FoundDivision);
@@ -84,6 +125,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Division, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Division, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Division, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Division, LeftBracket_Ev, Leftbracket, &FiniteStateMachine::FoundDivision);
+	AddTransition(Division, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Dot, Digit_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Dot, Letter_Ev, Ident, &FiniteStateMachine::FoundDot);
@@ -98,6 +141,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Dot, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Dot, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Dot, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Dot, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Dot, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Comma, Digit_Ev, Constant, &FiniteStateMachine::FoundComma);
 	AddTransition(Comma, Letter_Ev, Ident, &FiniteStateMachine::FoundComma);
@@ -112,6 +157,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Comma, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Comma, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Comma, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Comma, LeftBracket_Ev, Leftbracket, &FiniteStateMachine::FoundComma);
+	AddTransition(Comma, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Semicolon, Digit_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Semicolon, Letter_Ev, Other, &FiniteStateMachine::FoundOther);
@@ -126,6 +173,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Semicolon, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Semicolon, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Semicolon, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Semicolon, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Semicolon, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(More, Digit_Ev, Constant, &FiniteStateMachine::FoundMore);
 	AddTransition(More, Letter_Ev, Ident, &FiniteStateMachine::FoundMore);
@@ -140,6 +189,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(More, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(More, Equal_Ev, Equal, &FiniteStateMachine::FoundMore);
 	AddTransition(More, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(More, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(More, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Less, Digit_Ev, Constant, &FiniteStateMachine::FoundLess);
 	AddTransition(Less, Letter_Ev, Ident, &FiniteStateMachine::FoundLess);
@@ -154,6 +205,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Less, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Less, Equal_Ev, Equal, &FiniteStateMachine::FoundLess);
 	AddTransition(Less, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Less, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Less, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Equal, Digit_Ev, Constant, &FiniteStateMachine::FoundEqual);
 	AddTransition(Equal, Letter_Ev, Ident, &FiniteStateMachine::FoundEqual);
@@ -168,6 +221,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Equal, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Equal, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(Equal, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Equal, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(Equal, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(Space, Digit_Ev, Constant, &FiniteStateMachine::FoundSpace);
 	AddTransition(Space, Letter_Ev, Ident, &FiniteStateMachine::FoundSpace);
@@ -189,6 +244,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(Space, LetterO_Ev, O, &FiniteStateMachine::FoundSpace);
 	AddTransition(Space, LetterS_Ev, S, &FiniteStateMachine::FoundSpace);
 	AddTransition(Space, LetterW_Ev, W, &FiniteStateMachine::FoundSpace);
+	AddTransition(Space, LeftBracket_Ev, Leftbracket, &FiniteStateMachine::FoundSpace);
+	AddTransition(Space, RightBracket_Ev, Rightbracket, &FiniteStateMachine::FoundSpace);
 
 	AddTransition(S, Digit_Ev, Ident);
 	AddTransition(S, Letter_Ev, Ident);
@@ -204,6 +261,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(S, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(S, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(S, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(S, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(S, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(SE, Digit_Ev, Ident);
 	AddTransition(SE, Letter_Ev, Ident);
@@ -219,6 +278,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(SE, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(SE, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(SE, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SE, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SE, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(SEL, Digit_Ev, Ident);
 	AddTransition(SEL, Letter_Ev, Ident);
@@ -234,6 +295,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(SEL, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(SEL, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(SEL, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SEL, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SEL, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(SELE, Digit_Ev, Ident);
 	AddTransition(SELE, Letter_Ev, Ident);
@@ -249,6 +312,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(SELE, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(SELE, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(SELE, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SELE, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SELE, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(SELEC, Digit_Ev, Ident);
 	AddTransition(SELEC, Letter_Ev, Ident);
@@ -264,6 +329,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(SELEC, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(SELEC, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(SELEC, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SELEC, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SELEC, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(SELECT, Digit_Ev, Ident);
 	AddTransition(SELECT, Letter_Ev, Ident);
@@ -278,6 +345,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(SELECT, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(SELECT, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(SELECT, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SELECT, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(SELECT, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(F, Digit_Ev, Ident);
 	AddTransition(F, Letter_Ev, Ident);
@@ -293,6 +362,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(F, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(F, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(F, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(F, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(F, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(FR, Digit_Ev, Ident);
 	AddTransition(FR, Letter_Ev, Ident);
@@ -308,6 +379,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(FR, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(FR, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(FR, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(FR, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(FR, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(FRO, Digit_Ev, Ident);
 	AddTransition(FRO, Letter_Ev, Ident);
@@ -323,6 +396,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(FRO, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(FRO, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(FRO, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(FRO, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(FRO, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(FROM, Digit_Ev, Ident);
 	AddTransition(FROM, Letter_Ev, Ident);
@@ -337,6 +412,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(FROM, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(FROM, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(FROM, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(FROM, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(FROM, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(W, Digit_Ev, Ident);
 	AddTransition(W, Letter_Ev, Ident);
@@ -352,6 +429,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(W, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(W, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(W, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(W, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(W, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(WH, Digit_Ev, Ident);
 	AddTransition(WH, Letter_Ev, Ident);
@@ -367,6 +446,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(WH, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(WH, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(WH, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WH, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WH, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(WHE, Digit_Ev, Ident);
 	AddTransition(WHE, Letter_Ev, Ident);
@@ -382,6 +463,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(WHE, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(WHE, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(WHE, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WHE, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WHE, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(WHER, Digit_Ev, Ident);
 	AddTransition(WHER, Letter_Ev, Ident);
@@ -397,6 +480,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(WHER, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(WHER, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(WHER, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WHER, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WHER, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(WHERE, Digit_Ev, Ident);
 	AddTransition(WHERE, Letter_Ev, Ident);
@@ -411,6 +496,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(WHERE, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(WHERE, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(WHERE, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WHERE, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(WHERE, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(L, Digit_Ev, Ident);
 	AddTransition(L, Letter_Ev, Ident);
@@ -426,6 +513,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(L, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(L, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(L, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(L, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(L, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(LI, Digit_Ev, Ident);
 	AddTransition(LI, Letter_Ev, Ident);
@@ -441,6 +530,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(LI, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(LI, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(LI, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(LI, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(LI, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(LIK, Digit_Ev, Ident);
 	AddTransition(LIK, Letter_Ev, Ident);
@@ -456,6 +547,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(LIK, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(LIK, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(LIK, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(LIK, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(LIK, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(LIKE, Digit_Ev, Ident);
 	AddTransition(LIKE, Letter_Ev, Ident);
@@ -470,6 +563,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(LIKE, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(LIKE, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(LIKE, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(LIKE, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(LIKE, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(N, Digit_Ev, Ident);
 	AddTransition(N, Letter_Ev, Ident);
@@ -485,6 +580,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(N, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(N, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(N, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(N, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(N, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(NO, Digit_Ev, Ident);
 	AddTransition(NO, Letter_Ev, Ident);
@@ -500,6 +597,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(NO, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(NO, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(NO, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(NO, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(NO, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(NOT, Digit_Ev, Ident);
 	AddTransition(NOT, Letter_Ev, Ident);
@@ -514,6 +613,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(NOT, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(NOT, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(NOT, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(NOT, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(NOT, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(A, Digit_Ev, Ident);
 	AddTransition(A, Letter_Ev, Ident);
@@ -529,6 +630,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(A, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(A, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(A, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(A, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(A, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(AN, Digit_Ev, Ident);
 	AddTransition(AN, Letter_Ev, Ident);
@@ -544,6 +647,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(AN, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(AN, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(AN, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(AN, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(AN, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(AND, Digit_Ev, Ident);
 	AddTransition(AND, Letter_Ev, Ident);
@@ -558,6 +663,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(AND, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(AND, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(AND, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(AND, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(AND, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(O, Digit_Ev, Ident);
 	AddTransition(O, Letter_Ev, Ident);
@@ -573,6 +680,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(O, Less_Ev, Less, &FiniteStateMachine::FoundIdent);
 	AddTransition(O, Equal_Ev, Equal, &FiniteStateMachine::FoundIdent);
 	AddTransition(O, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(O, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(O, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 
 	AddTransition(OR, Digit_Ev, Ident);
 	AddTransition(OR, Letter_Ev, Ident);
@@ -587,6 +696,8 @@ FiniteStateMachine::FiniteStateMachine()
 	AddTransition(OR, Less_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(OR, Equal_Ev, Other, &FiniteStateMachine::FoundOther);
 	AddTransition(OR, Other_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(OR, LeftBracket_Ev, Other, &FiniteStateMachine::FoundOther);
+	AddTransition(OR, RightBracket_Ev, Other, &FiniteStateMachine::FoundOther);
 }
 
 
@@ -623,6 +734,7 @@ void FiniteStateMachine::Process(std::string& text)
 		if (std::isdigit(current))
 		{
 			ProcessEvent(Digit_Ev);
+			this->value += current;
 		}
 		else if (std::isalpha(current))
 		{
@@ -648,6 +760,12 @@ void FiniteStateMachine::Process(std::string& text)
 					else if (current == 'w' || current == 'W')
 						ProcessEvent(LetterW_Ev);
 					else if (current == 's' || current == 'S')
+						ProcessEvent(LetterS_Ev);
+					else ProcessEvent(Letter_Ev);
+				}
+				else if (lastOne == '(')
+				{
+					if (current == 's' || current == 'S')
 						ProcessEvent(LetterS_Ev);
 					else ProcessEvent(Letter_Ev);
 				}
@@ -710,6 +828,7 @@ void FiniteStateMachine::Process(std::string& text)
 					ProcessEvent(LetterT_Ev);
 				else ProcessEvent(Letter_Ev);
 			}
+			this->value += current;
 		}
 		else if (current == '\'')
 		{
@@ -747,6 +866,14 @@ void FiniteStateMachine::Process(std::string& text)
 		{
 			ProcessEvent(Equal_Ev);
 		}
+		else if (current == '(')
+		{
+			ProcessEvent(LeftBracket_Ev);
+		}
+		else if (current == ')')
+		{
+			ProcessEvent(RightBracket_Ev);
+		}
 		else if (std::isspace(current))
 		{
 			ProcessEvent(Space_Ev);
@@ -757,7 +884,6 @@ void FiniteStateMachine::Process(std::string& text)
 			this->value = current;
 			ProcessEvent(Other_Ev);
 		}
-		this->value += current;
 		lastOne = current;
 	}
 	ProcessEvent(Space_Ev);

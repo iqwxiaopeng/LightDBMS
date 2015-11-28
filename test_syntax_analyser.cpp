@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
 	if (argc > 1) {
 		testQuery = argv[1];
 	} else {
-		testQuery = "select name, price from items where a*b=c;";
+		//testQuery = "select name, price from items where a*b=c;";
+		testQuery = "SELECT Name FROM AdventureWorks2008R2.Production.Product WHERE ListPrice = (SELECT ListPrice FROM AdventureWorks2008R2.Production.Product WHERE Name = 'Chainring Bolts');";
 	}
 
 	cout << "========================================" << endl <<
@@ -29,7 +30,7 @@ int main(int argc, char *argv[])
         {
                 std::cout << it->getType() << " " << it->getValue() << std::endl;
         }
-
+	/*
 	cout << "========================================" << endl <<
 		"2. Starting Syntax Analyze... " << endl <<
 		"========================================" << endl;
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
 		cout << "Success!" << endl;
 	else
 		cout << "Error!" << endl;
-
+	*/
 	// stack<int> s;
 	// s.push(10);
 	// s.push(30);

@@ -13,10 +13,11 @@ class FiniteStateMachine
 		A, AN, AND, N, NO, NOT, O, OR, 
 		F, FR, FRO, FROM, L, LI, LIK, LIKE, 
 		S, SE, SEL, SELE, SELEC, SELECT, 
-		W, WH, WHE, WHER, WHERE
+		W, WH, WHE, WHER, WHERE,
+		Leftbracket, Rightbracket
 	};
 
-	static const size_t STATES_COUNT = 41;
+	static const size_t STATES_COUNT = 43;
 
 	enum Events
 	{
@@ -24,10 +25,11 @@ class FiniteStateMachine
 		LetterA_Ev, LetterC_Ev, LetterD_Ev, LetterE_Ev, LetterF_Ev, LetterH_Ev, LetterI_Ev, LetterK_Ev,
 		LetterL_Ev, LetterM_Ev, LetterN_Ev, LetterO_Ev, LetterR_Ev, LetterS_Ev, LetterT_Ev, LetterW_Ev,
 		Quote_Ev, Multiplication_Ev, Division_Ev, Dot_Ev, Comma_Ev,
-		Space_Ev, Semicolon_Ev, More_Ev, Less_Ev, Equal_Ev, Other_Ev
+		Space_Ev, Semicolon_Ev, More_Ev, Less_Ev, Equal_Ev, Other_Ev,
+		LeftBracket_Ev, RightBracket_Ev
 	};
 
-	static const size_t EVENTS_COUNT = 29;
+	static const size_t EVENTS_COUNT = 31;
 
 public:
 	FiniteStateMachine();
@@ -83,5 +85,7 @@ private:
 	void FoundOr() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::OR, "")); value = ""; }
 	void FoundNot() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::NOT, "")); value = ""; }
 	void FoundLike() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::LIKE, "")); value = ""; }
+	void FoundLeftBracket() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::LEFTBRACKET, "(")); value = ""; }
+	void FoundRightBracket() { lexems.push_back(Lexem::Lexem(Lexem::LexemType::RIGHTBRACKET, ")")); value = ""; }
 };
 #endif
